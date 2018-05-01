@@ -5,6 +5,8 @@ class App extends Component {
       quotes: [],
       currentPage: 1,
       quotesPerPage: 15,
+      themeMG:'',
+      searchText:'',
     }
     
     dataQuotes = () => {
@@ -26,6 +28,32 @@ class App extends Component {
     });
   }
 
+  handleClickMG = (event) => {
+    this.setState({
+      theme: event.target.value,
+    });
+  }
+
+  handlesearchResult = (event) => {
+    this.setState({
+      searchText: event.target.value,
+    })
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    this.setState({
+      searchText: "",
+      quotes: this.state.quotes.filter(item =>
+        item.quote.includes(this.state.searchText)
+      )
+    });
+  }
+
+  handleReload = () => {
+    this.dataQuotes();
+  }
+
   componentDidMount() {
     this.dataQuotes();
   };
@@ -35,8 +63,11 @@ class App extends Component {
 
     const indexOfLastQuote = currentPage * quotesPerPage;
     const indexOfFirstQuote = indexOfLastQuote - quotesPerPage;
-    const currentQuotes = quotes.slice(indexOfFirstQuote, indexOfLastQuote);
-
+    // const currentQuotes = quotes.slice(indexOfFirstQuote, indexOfLastQuote);
+    const gameQuotes = quotes.filter(quote => quote.theme === 'games');
+    const movieQuotes = quotes.filter(quote => quote.theme === 'movies');
+    const currentQuotes = this.state.theme === "games" ? gameQuotes.slice(indexOfFirstQuote, indexOfLastQuote) : this.state.theme === "movies" ? movieQuotes.slice(indexOfFirstQuote, indexOfLastQuote) : quotes.slice(indexOfFirstQuote, indexOfLastQuote);
+    // const currentQuotes = this.state.theme === "" ? quotes.slice(indexOfFirstQuote, indexOfLastQuote) : this.state.theme === "movies" ? movieQuotes.slice(indexOfFirstQuote, indexOfLastQuote) : gameQuotes.slice(indexOfFirstQuote, indexOfLastQuote);
     const renderQuotes = currentQuotes.map((item, i) => {
       return (
       <div key={i} className='quotes'>
@@ -63,15 +94,32 @@ class App extends Component {
       );
     });
 
-    return (
-      <div>
+    return <div>
         <div className="App">
           <h1 className="Header">Quotes</h1>
-          <ul>{renderQuotes}</ul>
-          <ul id="page-numbers">{renderPageNumbers}</ul>
+          <div>
+            <form className="form" onSubmit={this.handleSubmit}>
+              <input type="search" placeholder="Search" value={this.state.searchText} onChange={this.handlesearchResult} />
+            </form>
+            <button type="button" value="reload" onClick={this.handleReload}>
+              <b>RELOAD</b>
+            </button>
+            <button type="button" value="games" onClick={this.handleClickMG}>
+              GAME
+            </button>
+            <button type="button" value="" onClick={this.handleClickMG}>
+              QUOTE
+            </button>
+            <button type="button" value="movies" onClick={this.handleClickMG}>
+              MOVIE
+            </button>
           </div>
-      </div>
-    );
+          <div>
+            <ul>{renderQuotes}</ul>
+            <li id="page-numbers">{renderPageNumbers}</li>
+          </div>
+        </div>
+      </div>;
   }
 }
 
