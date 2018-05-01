@@ -63,11 +63,10 @@ class App extends Component {
 
     const indexOfLastQuote = currentPage * quotesPerPage;
     const indexOfFirstQuote = indexOfLastQuote - quotesPerPage;
-    // const currentQuotes = quotes.slice(indexOfFirstQuote, indexOfLastQuote);
     const gameQuotes = quotes.filter(quote => quote.theme === 'games');
     const movieQuotes = quotes.filter(quote => quote.theme === 'movies');
     const currentQuotes = this.state.theme === "games" ? gameQuotes.slice(indexOfFirstQuote, indexOfLastQuote) : this.state.theme === "movies" ? movieQuotes.slice(indexOfFirstQuote, indexOfLastQuote) : quotes.slice(indexOfFirstQuote, indexOfLastQuote);
-    // const currentQuotes = this.state.theme === "" ? quotes.slice(indexOfFirstQuote, indexOfLastQuote) : this.state.theme === "movies" ? movieQuotes.slice(indexOfFirstQuote, indexOfLastQuote) : gameQuotes.slice(indexOfFirstQuote, indexOfLastQuote);
+    
     const renderQuotes = currentQuotes.map((item, i) => {
       return (
       <div key={i} className='quotes'>
