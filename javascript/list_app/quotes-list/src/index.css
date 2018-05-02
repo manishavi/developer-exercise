@@ -21,47 +21,41 @@ body {
     align-items: center;
     width: 100%;
     height: 100px;
-    background: rgb(25, 14, 68);
+    background: rgb(21, 50, 87);
     user-select: none;
     top: 0;
     color: rgb(12, 141, 192);
     letter-spacing: 6px;
     font-size: 4rem;
-    
 }
-.form{
-  margin-top: 100px;
-}
+
 .quotes {
-  margin: 50;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   width: 80%;
-  margin-top: 80px;
-  padding: 20px 70px 70px 70px;
+  margin-top: 100px;
+  padding: 20px 80px 80px 80px;
   color: rgb(15, 14, 15);
   border-top: 1px solid rgba(255, 255, 255, 0.3);
 }
-  #quote {
+  .quotes .quote {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    /* margin-right: 0.5rem; */
     width: 350px;
     height: 400px;
   }
-  #quote-quote sp {
+  .quotes .quote .quote-quote {
   color: rgb(138, 17, 84);
   font-weight: bold;
-  background: rgb(123, 136, 160);
   margin-bottom: 30px;
 }
-quotes .quote #sp {
+.quotes .quote .sp {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -71,17 +65,23 @@ quotes .quote #sp {
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-    #span {
+    .quotes.quote .span {
       margin-right: 50px;
     }
 
-    #quote:hover {
+    .quotes .quote:hover {
       background: rgba(156, 156, 136, 0.1);
-    } 
+    }
+
+.form{
+  margin-top: 100px;
+}
 
 #page-numbers {
   list-style: none;
   display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #page-numbers > li {
