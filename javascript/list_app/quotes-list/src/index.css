@@ -20,7 +20,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100px;
+    height: 80px;
     background: rgb(21, 50, 87);
     user-select: none;
     top: 0;
@@ -36,8 +36,8 @@ body {
   align-items: center;
   justify-content: center;
   width: 80%;
-  margin-top: 100px;
-  padding: 20px 80px 80px 80px;
+  margin-top: 10px;
+  padding: 20px 20px 20px 20px;
   color: rgb(15, 14, 15);
   border-top: 1px solid rgba(255, 255, 255, 0.3);
 }
@@ -48,12 +48,12 @@ body {
     align-items: center;
     justify-content: center;
     width: 550px;
-    height: 400px;
+    height: 300px;
   }
   .quotes .quote .quote-quote {
   color: rgb(138, 17, 84);
   font-weight: bold;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 .quotes .quote .sp {
   display: flex;
@@ -74,7 +74,7 @@ body {
     }
 
 .form{
-  margin-top: 100px;
+  margin-top: 80px;
 }
 
 #page-numbers {
