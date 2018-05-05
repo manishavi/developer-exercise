@@ -2,26 +2,31 @@ require 'minitest/autorun'
 
 class Array
   def where(ary)
-    @self = self
-    arr = Array.new
-      self.each do |hash|
+    @arr = Array.new
+    @iter = self
+    ary.each do |key, val|
+      if @arr.any? 
+        @iter = @arr
+        @arr = []
+      end 
+      @iter.each do |hash|
         @element = hash;
-        @condition=ary.values[0];
-        @key = ary.keys[0];
-        if(@condition.kind_of?(Regexp))
-           @result = @element.detect{|k,v| k==@key && v=~@condition}
+        if(val.kind_of?(Regexp))
+          @result = @element.detect{|k,v| k==key && v=~val}
           unless @result.nil?
-            arr.push(@element)
+            @arr.push(@element)
           end
         else
-          @result = @element.detect {|k,v| k==@key && v==@condition} 
+          @result = @element.detect {|k,v| k==key && v==val} 
           unless @result.nil?
-            arr.push(@element)
+            @arr.push(@element)
           end
         end
       end
-      arr
+    end
+    @arr
   end
+  
 end
 
 class WhereTest < Minitest::Test
@@ -46,12 +51,12 @@ class WhereTest < Minitest::Test
     assert_equal [@boris, @wolf], @fixtures.where(:rank => 4)
   end
 
-  # def test_with_with_multiple_criteria
-  #   assert_equal [@wolf], @fixtures.where(:rank => 4, :quote => /get/)
-  # end
+  def test_with_with_multiple_criteria
+    assert_equal [@wolf], @fixtures.where(:rank => 4, :quote => /get/)
+  end
 
-  # def test_with_chain_calls
-  #   assert_equal [@charles], @fixtures.where(:quote => /if/i).where(:rank => 3)
-  # end
+  def test_with_chain_calls
+    assert_equal [@charles], @fixtures.where(:quote => /if/i).where(:rank => 3)
+  end
 end
 
