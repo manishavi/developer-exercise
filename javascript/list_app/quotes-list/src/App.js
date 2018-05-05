@@ -71,7 +71,7 @@ class App extends Component {
       return (
       <div key={i} className='quotes'>
           <ul className='quote'>
-            <li className='quote-quote sp'> <span><b>Quote:</b></span> {item.quote} </li>
+            <li className='quote-quote sp'>{item.quote} </li>
             <li className='quote-source sp'> <span><b>Source:</b></span> {item.source} </li>
             <li className='quote-context sp'> <span><b>Context:</b></span> {item.context} </li>
             <li className='quote-theme sp'> <span><b>Theme:</b></span> {item.theme} </li>
