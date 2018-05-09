@@ -43,15 +43,156 @@ class Deck
   end
 end
 
-class Hand
-  attr_accessor :cards
-
+class Subject
+  attr_accessor :cards, :value, :blackjack, :busted, :winner
   def initialize
     @cards = []
+    @value = 0
+    @blackjack = false
+    @winner = false
+  end
+
+  def total_value
+    @value = 0
+    @ace = false
+    unless @cards.empty?
+      @cards.each do |card|
+        if card.name == :ace  
+          @ace = true
+        else
+          @value = @value + card.value
+        end
+      end
+      if @ace == true 
+        if  (@value + 11) < 21
+          @value += 11
+          @blackjack = false
+        elsif (@value + 11) == 21
+          @value = 21
+          if @cards.size == 2 
+            @blackjack = true
+          end
+        else
+          @value = @value + 1
+        end
+      end
+    end
+    @value
+  end
+end
+
+class House
+  attr_accessor :player, :dealer, :deck
+  def initialize
+    @player = Subject.new
+    @dealer = Subject.new
+    @deck = Deck.new
+  end
+
+  def play
+    puts "Start of play"
+    puts "===================================="
+    @player.cards << @deck.deal_card
+    @dealer.cards << @deck.deal_card
+    @player.cards << @deck.deal_card
+    @dealer.cards << @deck.deal_card
+    puts "Show dealer's second card:"
+    puts "#{@dealer.cards[1].name}"
+    puts "*************************************"
+    puts "Player's total value to begin with: #{@player.total_value}"
+    puts "Player's first card:#{@player.cards[0].suite} - #{@player.cards[0].name} - #{@player.cards[0].value}"
+    puts "Player's second card:#{@player.cards[1].suite} - #{@player.cards[1].name} - #{@player.cards[1].value}"
+    puts "Checking Blackjack...."
+    check_blackjack
+    until @player.winner || @dealer.winner || @player.blackjack || @dealer.blackjack
+      puts "Game continues:"
+      puts "Type 1 for hit, or 2 for stay"
+      option = gets.chomp
+      if option == "1"
+        @player.cards << @deck.deal_card
+      elsif option == "2"
+        until @dealer.total_value >= 17
+          @dealer.cards << @deck.deal_card
+        end
+        decide_winner
+      else
+        puts "Invalid Input. Terminating..."
+      end 
+    end
+  end
+
+  def decide_winner
+      puts "\nDealer: #{@dealer.total_value} && Player: #{@player.total_value}"
+      check_blackjack
+      unless @dealer.blackjack == true || @player.blackjack == true
+        if @dealer.total_value > 21
+          @player.winner = true
+          puts "Dealer busted, player wins"
+        elsif @player.total_value > 21
+          @dealer.winner = true
+          puts "Player busted, dealer wins"
+        elsif @dealer.total_value > @player.total_value
+          @dealer.winner = true
+          puts "Dealer is the winner"
+        else
+          @player.winner = true
+          puts "Player is the winner"
+        end
+      end
+  end
+
+  def check_blackjack
+    if @dealer.blackjack == true
+      @player.busted = true
+      puts "Player busted, delaer has blackjack...game over" 
+    elsif @player.blackjack == true
+      @dealer.busted = true
+      puts "Dealer busted, player has blackjack...game over" 
+    end
   end
 end
 
 require 'test/unit'
+
+class HouseTest < Test::Unit::TestCase
+  def setup
+    @house = House.new
+  end
+  def test_decide_winner_no_blackjack_player
+    @house.player.cards << Card.new(:hearts, :ten, 10)
+    @house.player.cards << Card.new(:spades, :ten, 10)
+    @house.dealer.cards << Card.new(:hearts, :seven, 7)
+    @house.dealer.cards << Card.new(:hearts, :seven, 10)
+    @house.decide_winner
+    assert_equal @house.player.winner, true
+    assert_equal @house.dealer.winner, false
+  end
+  def test_decide_winner_no_blackjack_dealer
+    @house.player.cards << Card.new(:hearts, :ten, 10)
+    @house.player.cards << Card.new(:spades, :seven, 7)
+    @house.dealer.cards << Card.new(:hearts, :seven, 6)
+    @house.dealer.cards << Card.new(:hearts, :seven, 10)
+    @house.dealer.cards << Card.new(:hearts, :seven, 3)
+    @house.decide_winner
+    assert_equal @house.dealer.winner, true
+    assert_equal @house.player.winner, false
+  end
+end
+
+class SubjectTest < Test::Unit::TestCase
+  def setup
+    @player = Subject.new
+  end
+  def test_subject_calculate_value
+    assert_equal @player.total_value, 0
+  end
+  def test_black_jack
+    @player.cards << Card.new(:hearts, :ace, [11,1])
+    @player.cards << Card.new(:hearts, :ten, 10)
+    assert_equal @player.total_value, 21
+    assert_equal @player.blackjack, true
+  end
+end
 
 class CardTest < Test::Unit::TestCase
   def setup
@@ -89,3 +230,6 @@ class DeckTest < Test::Unit::TestCase
     assert_equal @deck.playable_cards.size, 52
   end
 end
+
+@house = House.new
+@house.play
